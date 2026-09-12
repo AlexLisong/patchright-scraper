@@ -1,0 +1,23 @@
+services:
+  scraper:
+    build: .
+    init: true
+    restart: unless-stopped
+    environment:
+      API_KEY: ${API_KEY:?Run npm run setup or set a random API_KEY}
+      HEADLESS: "false"
+      CONCURRENCY: "1"
+    ports:
+      - "127.0.0.1:8787:8787"
+    mem_limit: 1g
+    cpus: 1.0
+    pids_limit: 256
+    shm_size: 256m
+    security_opt:
+      - seccomp=./deploy/chromium-seccomp.json
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3

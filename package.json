@@ -1,0 +1,26 @@
+{
+  "name": "patchright-scraper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted Patchright scraping and Google organic search API",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "start": "node --env-file-if-exists=.env src/server.mjs",
+    "dev": "node --env-file-if-exists=.env --watch src/server.mjs",
+    "check": "node scripts/check.mjs",
+    "smoke": "node --env-file=.env scripts/smoke.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:browser": "node --test test/*.browser.mjs"
+  },
+  "dependencies": {
+    "fastify": "5.12.4",
+    "ipaddr.js": "2.2.0",
+    "patchright": "1.63.0",
+    "turndown": "7.2.2",
+    "zod": "4.1.12"
+  }
+}
