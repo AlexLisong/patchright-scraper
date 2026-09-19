@@ -4,11 +4,26 @@ A small self-hosted scraping and Google organic-search API built with **Patchrig
 
 It implements a documented subset of ScrapingBee and SerpAPI's public API shapes. It is independent software, not their proprietary implementation or a complete drop-in replacement.
 
+## At a glance
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /v1/scrape` | Render a public page and return text, Markdown, HTML, a screenshot, or CSS-selected fields |
+| `GET /api/v1/` | Supported ScrapingBee-style scraping parameters |
+| `GET /search.json` | Supported SerpAPI-style Google organic search parameters |
+| `GET /health` | Local service health without an API key |
+
+Each job uses isolated browser storage. The service includes API-key authentication, bounded queues and caching, and an outbound proxy that rejects private network destinations.
+
+**Current status:** page scraping and deterministic browser fixtures passed the recorded verification. Live Google search encountered a traffic challenge, so successful Google access is not guaranteed. Docker runtime verification is still pending. See [the verification record](VERIFICATION.md).
+
 ## Run locally
 
 Requires Node.js 22+ and macOS or Linux.
 
 ```sh
+git clone https://github.com/AlexLisong/patchright-scraper.git
+cd patchright-scraper
 nvm use                    # if you use nvm
 npm ci
 npm run setup              # generates .env; installs Patchright Chromium
@@ -154,3 +169,13 @@ Browser fixtures test JavaScript rendering, extraction, screenshot bytes, raw HT
 - [SerpAPI Google Search API](https://serpapi.com/search-api)
 
 This project has no affiliation with those services.
+
+## Project layout
+
+- `src/`: API routes, request schemas, browser jobs, extraction, outbound networking, queues and cache.
+- `scripts/`: local setup, syntax checks and live smoke checks.
+- `test/`: API/security tests and deterministic browser fixtures.
+- `deploy/`: Chromium seccomp profile and its upstream license notice.
+- `.env.example`: documented local configuration; `npm run setup` creates a separate ignored `.env` with a random key.
+
+Keep generated `.env`, browser artifacts and logs out of Git. The repository contains source and synthetic test fixtures, not a hosted scraping service.
